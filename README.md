@@ -1,13 +1,13 @@
 # vue-audio-tapir
 
-Vue-audio-tapir is a library for Vue 3 that records
-an audio message in the browser with the microphone. 
-Then the audio data is submitted to a backend server for
-further processing, for example sending the audio file 
-to an email address.
+Audio recorder component for Vue.js 3. It enables to record, play and send audio messages to a server.
 
-This is a popular way to receive audio contact messages on
-websites.
+## Use Case
+
+The most popular use case of vue-audio-tapir is to deliver an
+audio contact message directly from a website.
+
+## UI
 
 <img src="./doc/screenshot.png" style="display: block; margin: 40px auto; width: 300px" />
 
@@ -44,6 +44,9 @@ app.mount('#app');
 | successfulUpload | Function | callback function that is called when data is uploaded successfully |
 | failedUpload     | Function | callback function that is called when upload failed. |
 
+The data sent to the server is encoded in the MP3 format for efficient storage.
+For MP3 encoding the [lamejs](https://github.com/zhuker/lamejs) library is used.
+
 ## Project Setup
 
 ```
@@ -68,8 +71,8 @@ npm run lint
 ## Dependencies
 
 - [Vue 3](https://v3.vuejs.org/)
-- [lamejs](https://github.com/zhuker/lamejs)
 - [Tailwindcss](https://tailwindcss.com/)
+- [lamejs](https://github.com/zhuker/lamejs)
 
 ## References
 
