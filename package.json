@@ -1,10 +1,9 @@
 {
   "name": "vue-audio-tapir",
-  "description": "Audio recorder tapir component for Vue.js 3. It enables to create, play and send audio messages to a server.",
+  "description": "Audio recorder tapir component for Vue.js 3. It enables to record, play and send audio messages to a server.",
   "version": "1.0.0",
   "author": "Thomas Derflinger",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
@@ -39,6 +38,14 @@
     "vue": "3.2.21",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tderflinger/vue-audio-tapir.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tderflinger/vue-audio-tapir/issues"
+  },
+  "homepage": "https://github.com/tderflinger/vue-audio-tapir",
   "eslintConfig": {
     "root": true,
     "env": {
