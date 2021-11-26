@@ -1,24 +1,48 @@
 # vue-audio-tapir
 
-## Project setup
+Vue-audio-tapir is a library for Vue 3 that records
+an audio message in the browser with the microphone. 
+Then the audio data is submitted to a backend server for
+further processing, for example sending the audio file 
+to an email address.
+
+This is a popular way to receive audio contact messages on
+websites.
+
+<img src="./doc/screenshot.png" style="display: block; margin: 40px auto; width: 300px" />
+
+## Project Setup
+
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Development
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Production
 ```
 npm run build
 ```
 
-### Lints and fixes files
+### Linting
 ```
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Dependencies
+
+- [Vue 3](https://v3.vuejs.org/)
+- [lamejs](https://github.com/zhuker/lamejs)
+- [Tailwindcss](https://tailwindcss.com/)
+
+## References
+
+This project has been inspired by [vue-audio-recorder](https://github.com/grishkovelli/vue-audio-recorder)
+by Gennady Grishkovtsov.
+
+## License
+
+MIT License

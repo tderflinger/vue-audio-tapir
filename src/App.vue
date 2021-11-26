@@ -1,26 +1,32 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <tapir-widget class="mt-20" :time="2" :successfulUpload="success" :failedUpload="failed"
+    :afterRecording="afterRec" :backendEndpoint="backendEndpoint"/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+/* eslint-disable */
+import TapirWidget from './components/TapirWidget.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    TapirWidget,
+  },
+  computed: {
+    backendEndpoint() {
+      return process.env.VUE_APP_BACKEND_ENDPOINT;
+    }
+  },
+  methods: {
+    success() {
+      console.log("SUCCESS UPLOAD!!");
+    },
+    failed() {
+      console.log("FAILED!");
+    },
+    afterRec() {
+      console.log("Recorded successfully!");
+    },
   },
 };
 </script>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
