@@ -21,7 +21,7 @@
     "recording"
   ],
   "dependencies": {
-    "core-js": "^3.6.5",
+    "core-js": "3.19.1",
     "lamejs": "1.2.0",
     "vue": "3.2.21"
   },

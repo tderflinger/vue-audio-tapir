@@ -2,6 +2,8 @@
 
 Audio recorder component for Vue.js 3. It enables to record, play and send audio messages to a server.
 
+<img src="./doc/the-tapir-color.png" style="display: block; margin: 40px auto; width: 300px" />
+
 ## Use Case
 
 The most popular use case of vue-audio-tapir is to deliver an
