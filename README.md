@@ -1,4 +1,4 @@
-# vue-audio-tapir
+# vue-audio-tapir [![npm](https://img.shields.io/npm/v/vue-audio-tapir)](https://www.npmjs.com/package/vue-audio-tapir)
 
 Audio recorder component for Vue.js 3. It enables to record, play and send audio messages to a server.
 
