@@ -2,35 +2,45 @@
 
 Audio recorder component for Vue.js 3. It enables to record, play and send audio messages to a server.
 
-<img src="./doc/the-tapir-color.png" style="display: block; margin: 40px auto; width: 300px" />
+<img src="./doc/the-tapir-color.png" style="display: block; margin: 40px auto; width: 150px" />
 
 ## Use Case
 
 The most popular use case of vue-audio-tapir is to deliver an
 audio contact message directly from a website.
 
-## UI
-
 <img src="./doc/screenshot.png" style="display: block; margin: 40px auto; width: 300px" />
+
+## Installation
+
+In a Vue 3 application install with:
+
+```bash
+npm i vue-audio-tapir --save
+```
+
+or
+```bash
+yarn add vue-audio-tapir --save
+```
 
 ## Example Usage
 
 ```html
-<meta charset="utf-8">
-<title>Vue-audio-tapir Demo</title>
-<script src="https://unpkg.com/vue@next/dist/vue.global.prod.js"></script>
-<script src="./vue-audio-tapir.umd.js"></script>
-
-<link rel="stylesheet" href="./vue-audio-tapir.css">
-
-<div id="app" style="margin-top: 60px">
-  <vue-audio-tapir backendEndpoint="https://yourendpoint/audio" :time="2" ></vue-audio-tapir>
-</div>
+<template>
+  <tapir-widget :time="2" backendEndpoint="https://your-endpoint.com/.netlify/functions/audio-message" />
+</template>
 
 <script>
-app = Vue.createApp({});
-app.component('vue-audio-tapir', window['vue-audio-tapir'])
-app.mount('#app');
+import TapirWidget from 'vue-audio-tapir';
+import 'vue-audio-tapir/dist/vue-audio-tapir.css';
+
+export default {
+  name: 'App',
+  components: {
+    TapirWidget,
+  }
+}
 </script>
 ```
 
@@ -48,27 +58,6 @@ app.mount('#app');
 
 The data sent to the server is encoded in the MP3 format for efficient storage.
 For MP3 encoding the [lamejs](https://github.com/zhuker/lamejs) library is used.
-
-## Project Setup
-
-```
-npm install
-```
-
-### Development
-```
-npm run serve
-```
-
-### Production
-```
-npm run build
-```
-
-### Linting
-```
-npm run lint
-```
 
 ## Dependencies
 
