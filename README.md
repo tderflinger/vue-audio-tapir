@@ -10,7 +10,7 @@ The most popular use case of vue-audio-tapir is to deliver an
 audio contact message directly from a website.
 
 <img src="./doc/screenshot.png" style="display: block; margin: 40px auto; width: 300px" />
-
+ 
 ## Architecture Overview
 
 <img src="./doc/architecture-overview.png" style="display: block; margin: 40px auto; width: 550px" />
