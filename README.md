@@ -11,6 +11,17 @@ audio contact message directly from a website.
 
 <img src="./doc/screenshot.png" style="display: block; margin: 40px auto; width: 300px" />
 
+## Architecture Overview
+
+<img src="./doc/architecture-overview.png" style="display: block; margin: 40px auto; width: 300px" />
+
+The developer includes the vue-audio-tapir component in his Vue 3 website. When the user of the website
+wants to leave a voice message, he records his message and submits it. Vue-audio-tapir contacts the
+backend server, a Netlify serverless function and uploads the audio data. The serverless backend function
+sends the audio data to an email address using the email service Sendgrid.
+Finally the email with the voice message arrives at the destination, probably the email application of the
+website owner.
+
 ## Installation
 
 In a Vue 3 application install with:
