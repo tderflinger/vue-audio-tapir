@@ -13,7 +13,7 @@ audio contact message directly from a website.
 
 ## Architecture Overview
 
-<img src="./doc/architecture-overview.png" style="display: block; margin: 40px auto; width: 300px" />
+<img src="./doc/architecture-overview.png" style="display: block; margin: 40px auto; width: 550px" />
 
 The developer includes the vue-audio-tapir component in his Vue 3 website. When the user of the website
 wants to leave a voice message, he records his message and submits it. Vue-audio-tapir contacts the
