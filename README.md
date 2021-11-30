@@ -83,6 +83,12 @@ For MP3 encoding the [lamejs](https://github.com/zhuker/lamejs) library is used.
 - [Tailwindcss](https://tailwindcss.com/)
 - [lamejs](https://github.com/zhuker/lamejs)
 
+## Blog
+
+Your can read more about the Audio Tapir project on my blog: 
+
+https://www.tderflinger.com/en/easily-receive-audio-messages-from-users
+
 ## References
 
 This project has been inspired by [vue-audio-recorder](https://github.com/grishkovelli/vue-audio-recorder)
