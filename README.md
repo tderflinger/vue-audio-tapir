@@ -6,6 +6,11 @@ You can use both in combination to send you an email with the recorded audio mes
 
 <img src="./docs/the-tapir-color.png" style="display: block; margin: 40px auto; width: 150px" />
 
+## Demo
+
+[Demo page](https://tderflinger.github.io/vue-audio-tapir/) of Audio Tapir,
+you can record and play audio, but submitting is disabled.
+
 ## Use Case
 
 The most popular use case of vue-audio-tapir is to deliver an
