@@ -24850,70 +24850,74 @@ if (typeof window !== 'undefined') {
 // EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
 var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader-v16/dist??ref--1-1!./src/components/TapirWidget.vue?vue&type=template&id=41fdd027
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader-v16/dist??ref--1-1!./src/components/TapirWidget.vue?vue&type=template&id=5e0d382e
 
 var _hoisted_1 = {
   class: "text-center font-sans w-96 mx-auto rounded-lg shadow-lg border-solid border-2 p-8"
 };
-var _hoisted_2 = {
-  class: ""
-};
 
-var _hoisted_3 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h2", {
+var _hoisted_2 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h2", {
   class: "font-bold text-2xl"
 }, "Record Audio Message", -1);
 
-var _hoisted_4 = {
+var _hoisted_3 = {
   class: "text-sm font-bold"
 };
-var _hoisted_5 = {
+var _hoisted_4 = {
   class: "text-sm"
 };
-var _hoisted_6 = {
+var _hoisted_5 = {
   class: "text-sm text-red-400"
 };
-var _hoisted_7 = {
+var _hoisted_6 = {
   class: "mt-8"
 };
-var _hoisted_8 = ["src"];
+var _hoisted_7 = ["src"];
 
-var _hoisted_9 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" Your browser does not support the ");
+var _hoisted_8 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" Your browser does not support the ");
 
-var _hoisted_10 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("code", null, "audio", -1);
+var _hoisted_9 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("code", null, "audio", -1);
 
-var _hoisted_11 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" element. ");
+var _hoisted_10 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" element. ");
 
-var _hoisted_12 = [_hoisted_9, _hoisted_10, _hoisted_11];
+var _hoisted_11 = [_hoisted_8, _hoisted_9, _hoisted_10];
 
-var _hoisted_13 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("figcaption", {
+var _hoisted_12 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("figcaption", {
   class: "text-sm mt-2"
-}, " Listen to your recording before submitting. ", -1);
+}, "Listen to your recording before submitting.", -1);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_icon_button = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("icon-button");
 
   var _component_submit_button = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("submit-button");
 
-  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", _hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_2, [_hoisted_3, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [$data.recording ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_icon_button, {
+  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", _hoisted_1, [_hoisted_2, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, [$data.recording ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_icon_button, {
     key: 0,
+    style: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeStyle"])({
+      'border-color': $props.buttonColor
+    }),
     class: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeClass"])($options.buttonClass),
     name: "stop",
     onClick: $options.toggleRecording
-  }, null, 8, ["class", "onClick"])) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_icon_button, {
+  }, null, 8, ["style", "class", "onClick"])) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_icon_button, {
     key: 1,
+    style: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeStyle"])({
+      'border-color': $props.buttonColor
+    }),
     class: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeClass"])($options.buttonClass),
     name: "mic",
     onClick: $options.toggleRecording
-  }, null, 8, ["class", "onClick"]))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])($options.recordedTime), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_4, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])($data.successMessage), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_5, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])($data.instructionMessage), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_6, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])($data.errorMessage), 1)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("figure", _hoisted_7, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("audio", {
+  }, null, 8, ["style", "class", "onClick"]))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])($options.recordedTime), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_3, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])($data.successMessage), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_4, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])($data.instructionMessage), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_5, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])($data.errorMessage), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("figure", _hoisted_6, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("audio", {
     controls: "",
     src: $data.recordedAudio,
     type: "audio/mpeg",
     class: "mx-auto"
-  }, _hoisted_12, 8, _hoisted_8), _hoisted_13]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_submit_button, {
-    onSubmit: $options.sendData
-  }, null, 8, ["onSubmit"])]);
+  }, _hoisted_11, 8, _hoisted_7), _hoisted_12]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_submit_button, {
+    onSubmit: $options.sendData,
+    color: $props.buttonColor
+  }, null, 8, ["onSubmit", "color"])]);
 }
-// CONCATENATED MODULE: ./src/components/TapirWidget.vue?vue&type=template&id=41fdd027
+// CONCATENATED MODULE: ./src/components/TapirWidget.vue?vue&type=template&id=5e0d382e
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.to-string.js
 var es_object_to_string = __webpack_require__("d3b7");
@@ -25014,17 +25018,20 @@ var exportHelper_default = /*#__PURE__*/__webpack_require__.n(exportHelper);
 const __exports__ = /*#__PURE__*/exportHelper_default()(IconButtonvue_type_script_lang_js, [['render',IconButtonvue_type_template_id_3ae5c9e4_render]])
 
 /* harmony default export */ var IconButton = (__exports__);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader-v16/dist??ref--1-1!./src/components/SubmitButton.vue?vue&type=template&id=37d9db44
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader-v16/dist??ref--1-1!./src/components/SubmitButton.vue?vue&type=template&id=06610a5c
 
-function SubmitButtonvue_type_template_id_37d9db44_render(_ctx, _cache, $props, $setup, $data, $options) {
+function SubmitButtonvue_type_template_id_06610a5c_render(_ctx, _cache, $props, $setup, $data, $options) {
   return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.clickButton && $options.clickButton.apply($options, arguments);
     }),
-    class: "bg-green-500 p-3 mt-8 text-black rounded-md"
-  }, " Submit ");
+    style: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeStyle"])({
+      'background-color': $props.color
+    }),
+    class: "p-3 mt-8 text-black rounded-md"
+  }, " Submit ", 4);
 }
-// CONCATENATED MODULE: ./src/components/SubmitButton.vue?vue&type=template&id=37d9db44
+// CONCATENATED MODULE: ./src/components/SubmitButton.vue?vue&type=template&id=06610a5c
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader-v16/dist??ref--1-1!./src/components/SubmitButton.vue?vue&type=script&lang=js
 /* harmony default export */ var SubmitButtonvue_type_script_lang_js = ({
@@ -25048,7 +25055,7 @@ function SubmitButtonvue_type_template_id_37d9db44_render(_ctx, _cache, $props, 
 
 
 
-const SubmitButton_exports_ = /*#__PURE__*/exportHelper_default()(SubmitButtonvue_type_script_lang_js, [['render',SubmitButtonvue_type_template_id_37d9db44_render]])
+const SubmitButton_exports_ = /*#__PURE__*/exportHelper_default()(SubmitButtonvue_type_script_lang_js, [['render',SubmitButtonvue_type_template_id_06610a5c_render]])
 
 /* harmony default export */ var SubmitButton = (SubmitButton_exports_);
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js
@@ -25630,7 +25637,7 @@ var SUCCESS_MESSAGE_SUBMIT = "Successfully submitted audio message! Thank you!";
 var ERROR_SUBMITTING_MESSAGE = "Error submitting audio message! Please try again later.";
 var MP3_FORMAT = "mp3";
 /* harmony default export */ var TapirWidgetvue_type_script_lang_js = ({
-  name: 'TapirWidget',
+  name: "TapirWidget",
   props: {
     // in minutes
     time: {
@@ -25648,6 +25655,10 @@ var MP3_FORMAT = "mp3";
     backendEndpoint: {
       type: String,
       default: ""
+    },
+    buttonColor: {
+      type: String,
+      default: "green"
     },
     // callback functions
     afterRecording: {
@@ -25673,7 +25684,7 @@ var MP3_FORMAT = "mp3";
   },
   computed: {
     buttonClass: function buttonClass() {
-      return "mx-auto h-14 w-14 fill-current text-black cursor-pointer rounded-50 border-2 border-green-500 m-4 p-2";
+      return "mx-auto h-14 w-14 fill-current text-black cursor-pointer rounded-50 border-2 m-4 p-2";
     },
     recordedTime: function recordedTime() {
       var _this$recorder, _this$recorder2;
@@ -25768,7 +25779,7 @@ var MP3_FORMAT = "mp3";
                   break;
                 }
 
-                throw new Error('Error sending data!');
+                throw new Error("Error sending data!");
 
               case 8:
                 _this.errorMessage = null;
