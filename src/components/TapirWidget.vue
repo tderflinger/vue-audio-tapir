@@ -1,26 +1,34 @@
 <template>
   <div class="text-center font-sans w-96 mx-auto rounded-lg shadow-lg border-solid border-2 p-8">
-    <div class="">
-      <h2 class="font-bold text-2xl">Record Audio Message</h2>
-      <div>
-        <icon-button :class="buttonClass" v-if="recording" name="stop" @click="toggleRecording" />
-        <icon-button :class="buttonClass" v-else name="mic" @click="toggleRecording" />
-      </div>
-      <div>{{ recordedTime }}</div>
-      <div class="text-sm font-bold">{{ successMessage }}</div>
-      <div class="text-sm">{{ instructionMessage }}</div>
-      <div class="text-sm text-red-400">{{ errorMessage }}</div>
+    <h2 class="font-bold text-2xl">Record Audio Message</h2>
+    <div>
+      <icon-button
+        :style="{ 'border-color': buttonColor }"
+        :class="buttonClass"
+        v-if="recording"
+        name="stop"
+        @click="toggleRecording"
+      />
+      <icon-button
+        :style="{ 'border-color': buttonColor }"
+        :class="buttonClass"
+        v-else
+        name="mic"
+        @click="toggleRecording"
+      />
     </div>
+    <div>{{ recordedTime }}</div>
+    <div class="text-sm font-bold">{{ successMessage }}</div>
+    <div class="text-sm">{{ instructionMessage }}</div>
+    <div class="text-sm text-red-400">{{ errorMessage }}</div>
     <figure class="mt-8">
       <audio controls :src="recordedAudio" type="audio/mpeg" class="mx-auto">
         Your browser does not support the
         <code>audio</code> element.
       </audio>
-      <figcaption class="text-sm mt-2">
-        Listen to your recording before submitting.
-      </figcaption>
+      <figcaption class="text-sm mt-2">Listen to your recording before submitting.</figcaption>
     </figure>
-    <submit-button @submit="sendData" />
+    <submit-button @submit="sendData" :color="buttonColor" />
   </div>
 </template>
 
@@ -29,7 +37,7 @@ import IconButton from "./IconButton.vue";
 import SubmitButton from "./SubmitButton.vue";
 import Recorder from "../lib/recorder";
 import convertTimeMMSS from "../lib/utils";
-import '../styles/app.css';
+import "../styles/app.css";
 
 const INSTRUCTION_MESSAGE = "Click icon to start recording message.";
 const INSTRUCTION_MESSAGE_STOP = "Click icon again to stop recording.";
@@ -41,13 +49,14 @@ const ERROR_SUBMITTING_MESSAGE = "Error submitting audio message! Please try aga
 const MP3_FORMAT = "mp3";
 
 export default {
-  name: 'TapirWidget',
+  name: "TapirWidget",
   props: {
     // in minutes
     time: { type: Number, default: 1 },
     bitRate: { type: Number, default: 128 },
     sampleRate: { type: Number, default: 44100 },
     backendEndpoint: { type: String, default: "" },
+    buttonColor: { type: String, default: "green" },
 
     // callback functions
     afterRecording: { type: Function },
@@ -67,7 +76,7 @@ export default {
   },
   computed: {
     buttonClass() {
-      return "mx-auto h-14 w-14 fill-current text-black cursor-pointer rounded-50 border-2 border-green-500 m-4 p-2";
+      return "mx-auto h-14 w-14 fill-current text-black cursor-pointer rounded-50 border-2 m-4 p-2";
     },
     recordedTime() {
       if (this.time && this.recorder?.duration >= this.time * 60) {
@@ -135,7 +144,7 @@ export default {
           },
         });
         if (!response.ok) {
-          throw new Error('Error sending data!');
+          throw new Error("Error sending data!");
         }
         this.errorMessage = null;
         this.successMessage = SUCCESS_MESSAGE_SUBMIT;

@@ -70,6 +70,7 @@ export default {
 | bitRate          | Number   | bit rate of recording                             |
 | sampleRate       | Number   | sample rate of recording                          |
 | backendEndpoint  | String   | URL of the service that receives the data as POST |
+| buttonColor      | String   | color code of the buttons for theming             |
 | afterRecording   | Function | callback function when recording is finished.     |
 | successfulUpload | Function | callback function that is called when data is uploaded successfully |
 | failedUpload     | Function | callback function that is called when upload failed. |
