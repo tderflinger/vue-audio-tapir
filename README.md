@@ -1,4 +1,4 @@
-# vue-audio-tapir [![npm](https://img.shields.io/npm/v/vue-audio-tapir)](https://www.npmjs.com/package/vue-audio-tapir)
+# vue-audio-tapir [![npm](https://img.shields.io/npm/v/vue-audio-tapir)](https://www.npmjs.com/package/vue-audio-tapir) [![npm](https://img.shields.io/npm/l/vue-audio-tapir)](https://www.npmjs.com/package/vue-audio-tapir)
 
 Audio recorder component for Vue.js 3. It enables to record, play and send audio messages to a server.
 There is a corresponding serverless backend function called [audio-tapir-function](https://github.com/tderflinger/audio-tapir-function).
@@ -85,11 +85,14 @@ For MP3 encoding the [lamejs](https://github.com/zhuker/lamejs) library is used.
 - [Tailwindcss](https://tailwindcss.com/)
 - [lamejs](https://github.com/zhuker/lamejs)
 
-## Blog
+## More Information
+
+Follow me on Twitter for updates: [@tderflinger](https://twitter.com/tderflinger)
 
 Your can read more about the Audio Tapir project on my blog: 
 
 https://www.tderflinger.com/en/easily-receive-audio-messages-from-users
+
 
 ## References
 
