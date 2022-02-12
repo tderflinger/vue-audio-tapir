@@ -1,5 +1,8 @@
 # vue-audio-tapir [![npm](https://img.shields.io/npm/v/vue-audio-tapir)](https://www.npmjs.com/package/vue-audio-tapir) [![npm](https://img.shields.io/npm/l/vue-audio-tapir)](https://www.npmjs.com/package/vue-audio-tapir)
 
+<div style="text-align: right"><a href="./README-zh.md">中文</a></div>
+<br/>
+
 Audio recorder component for Vue.js 3. It enables to record, play and send audio messages to a server.
 There is a corresponding serverless backend function called [audio-tapir-function](https://github.com/tderflinger/audio-tapir-function).
 You can use both in combination to send you an email with the recorded audio message.
