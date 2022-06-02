@@ -46,22 +46,24 @@ const SUCCESS_MESSAGE = "Successfully recorded message!";
 const SUCCESS_MESSAGE_SUBMIT = "Successfully submitted audio message! Thank you!";
 const ERROR_SUBMITTING_MESSAGE = "Error submitting audio message! Please try again later.";
 
-const MP3_FORMAT = "mp3";
-
 export default {
   name: "TapirWidget",
   props: {
-    // in minutes
-    time: { type: Number, default: 1 },
+    time: { type: Number, default: 1 }, // in minutes
     bitRate: { type: Number, default: 128 },
     sampleRate: { type: Number, default: 44100 },
     backendEndpoint: { type: String, default: "" },
     buttonColor: { type: String, default: "green" },
+    audioFormat: { type: String, default: "MP3" }, // can be MP3 or WAV
 
     // callback functions
     afterRecording: { type: Function },
     successfulUpload: { type: Function },
     failedUpload: { type: Function },
+  },
+  components: {
+    IconButton,
+    SubmitButton,
   },
   data() {
     return {
@@ -85,10 +87,6 @@ export default {
       return convertTimeMMSS(this.recorder?.duration);
     },
   },
-  components: {
-    IconButton,
-    SubmitButton,
-  },
   beforeUnmount() {
     if (this.recording) {
       this.stopRecorder();
@@ -108,7 +106,7 @@ export default {
         micFailed: this.micFailed,
         bitRate: this.bitRate,
         sampleRate: this.sampleRate,
-        format: MP3_FORMAT,
+        format: this.audioFormat,
       });
       this.recorder.start();
       this.successMessage = null;

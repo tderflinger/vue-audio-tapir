@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Vue-audio-tapir Demo</title>
+    <script src="https://unpkg.com/vue@next/dist/vue.global.prod.js"></script>
+    <script src="./vue-audio-tapir.umd.js"></script>
+
+    <link rel="stylesheet" href="./vue-audio-tapir.css" />
+  </head>
+  <body>
+    <div id="app" style="margin-top: 60px">
+      <vue-audio-tapir></vue-audio-tapir>
+    </div>
+  </body>
+
+  <script>
+    app = Vue.createApp({});
+    app.component("vue-audio-tapir", window["vue-audio-tapir"]);
+    app.mount("#app");
+  </script>
+</html>

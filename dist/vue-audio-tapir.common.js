@@ -300,6 +300,36 @@ module.exports = !!firefox && +firefox[1];
 
 /***/ }),
 
+/***/ "057f":
+/***/ (function(module, exports, __webpack_require__) {
+
+/* eslint-disable es/no-object-getownpropertynames -- safe */
+var classof = __webpack_require__("c6b6");
+var toIndexedObject = __webpack_require__("fc6a");
+var $getOwnPropertyNames = __webpack_require__("241c").f;
+var arraySlice = __webpack_require__("f36a");
+
+var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
+  ? Object.getOwnPropertyNames(window) : [];
+
+var getWindowNames = function (it) {
+  try {
+    return $getOwnPropertyNames(it);
+  } catch (error) {
+    return arraySlice(windowNames);
+  }
+};
+
+// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
+module.exports.f = function getOwnPropertyNames(it) {
+  return windowNames && classof(it) == 'Window'
+    ? getWindowNames(it)
+    : $getOwnPropertyNames(toIndexedObject(it));
+};
+
+
+/***/ }),
+
 /***/ "06cf":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -814,6 +844,23 @@ module.exports = function (METHOD_NAME) {
     return array[METHOD_NAME](Boolean).foo !== 1;
   });
 };
+
+
+/***/ }),
+
+/***/ "1fe2":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var collection = __webpack_require__("6d61");
+var collectionWeak = __webpack_require__("acac");
+
+// `WeakSet` constructor
+// https://tc39.es/ecma262/#sec-weakset-constructor
+collection('WeakSet', function (init) {
+  return function WeakSet() { return init(this, arguments.length ? arguments[0] : undefined); };
+}, collectionWeak);
 
 
 /***/ }),
@@ -7667,6 +7714,29 @@ module.exports = function from(arrayLike /* , mapfn = undefined, thisArg = undef
 
 /***/ }),
 
+/***/ "4fad":
+/***/ (function(module, exports, __webpack_require__) {
+
+var fails = __webpack_require__("d039");
+var isObject = __webpack_require__("861d");
+var classof = __webpack_require__("c6b6");
+var ARRAY_BUFFER_NON_EXTENSIBLE = __webpack_require__("d86b");
+
+// eslint-disable-next-line es/no-object-isextensible -- safe
+var $isExtensible = Object.isExtensible;
+var FAILS_ON_PRIMITIVES = fails(function () { $isExtensible(1); });
+
+// `Object.isExtensible` method
+// https://tc39.es/ecma262/#sec-object.isextensible
+module.exports = (FAILS_ON_PRIMITIVES || ARRAY_BUFFER_NON_EXTENSIBLE) ? function isExtensible(it) {
+  if (!isObject(it)) return false;
+  if (ARRAY_BUFFER_NON_EXTENSIBLE && classof(it) == 'ArrayBuffer') return false;
+  return $isExtensible ? $isExtensible(it) : true;
+} : $isExtensible;
+
+
+/***/ }),
+
 /***/ "5087":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10590,6 +10660,119 @@ exports.default = (sfc, props) => {
         target[key] = val;
     }
     return target;
+};
+
+
+/***/ }),
+
+/***/ "6d61":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__("23e7");
+var global = __webpack_require__("da84");
+var uncurryThis = __webpack_require__("e330");
+var isForced = __webpack_require__("94ca");
+var redefine = __webpack_require__("6eeb");
+var InternalMetadataModule = __webpack_require__("f183");
+var iterate = __webpack_require__("2266");
+var anInstance = __webpack_require__("19aa");
+var isCallable = __webpack_require__("1626");
+var isObject = __webpack_require__("861d");
+var fails = __webpack_require__("d039");
+var checkCorrectnessOfIteration = __webpack_require__("1c7e");
+var setToStringTag = __webpack_require__("d44e");
+var inheritIfRequired = __webpack_require__("7156");
+
+module.exports = function (CONSTRUCTOR_NAME, wrapper, common) {
+  var IS_MAP = CONSTRUCTOR_NAME.indexOf('Map') !== -1;
+  var IS_WEAK = CONSTRUCTOR_NAME.indexOf('Weak') !== -1;
+  var ADDER = IS_MAP ? 'set' : 'add';
+  var NativeConstructor = global[CONSTRUCTOR_NAME];
+  var NativePrototype = NativeConstructor && NativeConstructor.prototype;
+  var Constructor = NativeConstructor;
+  var exported = {};
+
+  var fixMethod = function (KEY) {
+    var uncurriedNativeMethod = uncurryThis(NativePrototype[KEY]);
+    redefine(NativePrototype, KEY,
+      KEY == 'add' ? function add(value) {
+        uncurriedNativeMethod(this, value === 0 ? 0 : value);
+        return this;
+      } : KEY == 'delete' ? function (key) {
+        return IS_WEAK && !isObject(key) ? false : uncurriedNativeMethod(this, key === 0 ? 0 : key);
+      } : KEY == 'get' ? function get(key) {
+        return IS_WEAK && !isObject(key) ? undefined : uncurriedNativeMethod(this, key === 0 ? 0 : key);
+      } : KEY == 'has' ? function has(key) {
+        return IS_WEAK && !isObject(key) ? false : uncurriedNativeMethod(this, key === 0 ? 0 : key);
+      } : function set(key, value) {
+        uncurriedNativeMethod(this, key === 0 ? 0 : key, value);
+        return this;
+      }
+    );
+  };
+
+  var REPLACE = isForced(
+    CONSTRUCTOR_NAME,
+    !isCallable(NativeConstructor) || !(IS_WEAK || NativePrototype.forEach && !fails(function () {
+      new NativeConstructor().entries().next();
+    }))
+  );
+
+  if (REPLACE) {
+    // create collection constructor
+    Constructor = common.getConstructor(wrapper, CONSTRUCTOR_NAME, IS_MAP, ADDER);
+    InternalMetadataModule.enable();
+  } else if (isForced(CONSTRUCTOR_NAME, true)) {
+    var instance = new Constructor();
+    // early implementations not supports chaining
+    var HASNT_CHAINING = instance[ADDER](IS_WEAK ? {} : -0, 1) != instance;
+    // V8 ~ Chromium 40- weak-collections throws on primitives, but should return false
+    var THROWS_ON_PRIMITIVES = fails(function () { instance.has(1); });
+    // most early implementations doesn't supports iterables, most modern - not close it correctly
+    // eslint-disable-next-line no-new -- required for testing
+    var ACCEPT_ITERABLES = checkCorrectnessOfIteration(function (iterable) { new NativeConstructor(iterable); });
+    // for early implementations -0 and +0 not the same
+    var BUGGY_ZERO = !IS_WEAK && fails(function () {
+      // V8 ~ Chromium 42- fails only with 5+ elements
+      var $instance = new NativeConstructor();
+      var index = 5;
+      while (index--) $instance[ADDER](index, index);
+      return !$instance.has(-0);
+    });
+
+    if (!ACCEPT_ITERABLES) {
+      Constructor = wrapper(function (dummy, iterable) {
+        anInstance(dummy, NativePrototype);
+        var that = inheritIfRequired(new NativeConstructor(), dummy, Constructor);
+        if (iterable != undefined) iterate(iterable, that[ADDER], { that: that, AS_ENTRIES: IS_MAP });
+        return that;
+      });
+      Constructor.prototype = NativePrototype;
+      NativePrototype.constructor = Constructor;
+    }
+
+    if (THROWS_ON_PRIMITIVES || BUGGY_ZERO) {
+      fixMethod('delete');
+      fixMethod('has');
+      IS_MAP && fixMethod('get');
+    }
+
+    if (BUGGY_ZERO || HASNT_CHAINING) fixMethod(ADDER);
+
+    // weak collections should not contains .clear method
+    if (IS_WEAK && NativePrototype.clear) delete NativePrototype.clear;
+  }
+
+  exported[CONSTRUCTOR_NAME] = Constructor;
+  $({ global: true, forced: Constructor != NativeConstructor }, exported);
+
+  setToStringTag(Constructor, CONSTRUCTOR_NAME);
+
+  if (!IS_WEAK) common.setStrong(Constructor, CONSTRUCTOR_NAME, IS_MAP);
+
+  return Constructor;
 };
 
 
@@ -14059,6 +14242,144 @@ module.exports = ATH;
 
 /***/ }),
 
+/***/ "acac":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var uncurryThis = __webpack_require__("e330");
+var redefineAll = __webpack_require__("e2cc");
+var getWeakData = __webpack_require__("f183").getWeakData;
+var anObject = __webpack_require__("825a");
+var isObject = __webpack_require__("861d");
+var anInstance = __webpack_require__("19aa");
+var iterate = __webpack_require__("2266");
+var ArrayIterationModule = __webpack_require__("b727");
+var hasOwn = __webpack_require__("1a2d");
+var InternalStateModule = __webpack_require__("69f3");
+
+var setInternalState = InternalStateModule.set;
+var internalStateGetterFor = InternalStateModule.getterFor;
+var find = ArrayIterationModule.find;
+var findIndex = ArrayIterationModule.findIndex;
+var splice = uncurryThis([].splice);
+var id = 0;
+
+// fallback for uncaught frozen keys
+var uncaughtFrozenStore = function (store) {
+  return store.frozen || (store.frozen = new UncaughtFrozenStore());
+};
+
+var UncaughtFrozenStore = function () {
+  this.entries = [];
+};
+
+var findUncaughtFrozen = function (store, key) {
+  return find(store.entries, function (it) {
+    return it[0] === key;
+  });
+};
+
+UncaughtFrozenStore.prototype = {
+  get: function (key) {
+    var entry = findUncaughtFrozen(this, key);
+    if (entry) return entry[1];
+  },
+  has: function (key) {
+    return !!findUncaughtFrozen(this, key);
+  },
+  set: function (key, value) {
+    var entry = findUncaughtFrozen(this, key);
+    if (entry) entry[1] = value;
+    else this.entries.push([key, value]);
+  },
+  'delete': function (key) {
+    var index = findIndex(this.entries, function (it) {
+      return it[0] === key;
+    });
+    if (~index) splice(this.entries, index, 1);
+    return !!~index;
+  }
+};
+
+module.exports = {
+  getConstructor: function (wrapper, CONSTRUCTOR_NAME, IS_MAP, ADDER) {
+    var Constructor = wrapper(function (that, iterable) {
+      anInstance(that, Prototype);
+      setInternalState(that, {
+        type: CONSTRUCTOR_NAME,
+        id: id++,
+        frozen: undefined
+      });
+      if (iterable != undefined) iterate(iterable, that[ADDER], { that: that, AS_ENTRIES: IS_MAP });
+    });
+
+    var Prototype = Constructor.prototype;
+
+    var getInternalState = internalStateGetterFor(CONSTRUCTOR_NAME);
+
+    var define = function (that, key, value) {
+      var state = getInternalState(that);
+      var data = getWeakData(anObject(key), true);
+      if (data === true) uncaughtFrozenStore(state).set(key, value);
+      else data[state.id] = value;
+      return that;
+    };
+
+    redefineAll(Prototype, {
+      // `{ WeakMap, WeakSet }.prototype.delete(key)` methods
+      // https://tc39.es/ecma262/#sec-weakmap.prototype.delete
+      // https://tc39.es/ecma262/#sec-weakset.prototype.delete
+      'delete': function (key) {
+        var state = getInternalState(this);
+        if (!isObject(key)) return false;
+        var data = getWeakData(key);
+        if (data === true) return uncaughtFrozenStore(state)['delete'](key);
+        return data && hasOwn(data, state.id) && delete data[state.id];
+      },
+      // `{ WeakMap, WeakSet }.prototype.has(key)` methods
+      // https://tc39.es/ecma262/#sec-weakmap.prototype.has
+      // https://tc39.es/ecma262/#sec-weakset.prototype.has
+      has: function has(key) {
+        var state = getInternalState(this);
+        if (!isObject(key)) return false;
+        var data = getWeakData(key);
+        if (data === true) return uncaughtFrozenStore(state).has(key);
+        return data && hasOwn(data, state.id);
+      }
+    });
+
+    redefineAll(Prototype, IS_MAP ? {
+      // `WeakMap.prototype.get(key)` method
+      // https://tc39.es/ecma262/#sec-weakmap.prototype.get
+      get: function get(key) {
+        var state = getInternalState(this);
+        if (isObject(key)) {
+          var data = getWeakData(key);
+          if (data === true) return uncaughtFrozenStore(state).get(key);
+          return data ? data[state.id] : undefined;
+        }
+      },
+      // `WeakMap.prototype.set(key, value)` method
+      // https://tc39.es/ecma262/#sec-weakmap.prototype.set
+      set: function set(key, value) {
+        return define(this, key, value);
+      }
+    } : {
+      // `WeakSet.prototype.add(value)` method
+      // https://tc39.es/ecma262/#sec-weakset.prototype.add
+      add: function add(value) {
+        return define(this, value, true);
+      }
+    });
+
+    return Constructor;
+  }
+};
+
+
+/***/ }),
+
 /***/ "addb":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15659,6 +15980,19 @@ module.exports = QuantizePVT;
 
 /***/ }),
 
+/***/ "bb2f":
+/***/ (function(module, exports, __webpack_require__) {
+
+var fails = __webpack_require__("d039");
+
+module.exports = !fails(function () {
+  // eslint-disable-next-line es/no-object-isextensible, es/no-object-preventextensions -- required for testing
+  return Object.isExtensible(Object.preventExtensions({}));
+});
+
+
+/***/ }),
+
 /***/ "bd8b":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16633,6 +16967,23 @@ var exportTypedArrayMethod = ArrayBufferViewCore.exportTypedArrayMethod;
 // https://tc39.es/ecma262/#sec-%typedarray%.prototype.foreach
 exportTypedArrayMethod('forEach', function forEach(callbackfn /* , thisArg */) {
   $forEach(aTypedArray(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+});
+
+
+/***/ }),
+
+/***/ "d86b":
+/***/ (function(module, exports, __webpack_require__) {
+
+// FF26- bug: ArrayBuffers are non-extensible, but Object.isExtensible does not report it
+var fails = __webpack_require__("d039");
+
+module.exports = fails(function () {
+  if (typeof ArrayBuffer == 'function') {
+    var buffer = new ArrayBuffer(8);
+    // eslint-disable-next-line es/no-object-isextensible, es/no-object-defineproperty -- safe
+    if (Object.isExtensible(buffer)) Object.defineProperty(buffer, 'a', { value: 8 });
+  }
 });
 
 
@@ -23426,6 +23777,102 @@ module.exports.f = function (C) {
 
 /***/ }),
 
+/***/ "f183":
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__("23e7");
+var uncurryThis = __webpack_require__("e330");
+var hiddenKeys = __webpack_require__("d012");
+var isObject = __webpack_require__("861d");
+var hasOwn = __webpack_require__("1a2d");
+var defineProperty = __webpack_require__("9bf2").f;
+var getOwnPropertyNamesModule = __webpack_require__("241c");
+var getOwnPropertyNamesExternalModule = __webpack_require__("057f");
+var isExtensible = __webpack_require__("4fad");
+var uid = __webpack_require__("90e3");
+var FREEZING = __webpack_require__("bb2f");
+
+var REQUIRED = false;
+var METADATA = uid('meta');
+var id = 0;
+
+var setMetadata = function (it) {
+  defineProperty(it, METADATA, { value: {
+    objectID: 'O' + id++, // object ID
+    weakData: {}          // weak collections IDs
+  } });
+};
+
+var fastKey = function (it, create) {
+  // return a primitive with prefix
+  if (!isObject(it)) return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it;
+  if (!hasOwn(it, METADATA)) {
+    // can't set metadata to uncaught frozen object
+    if (!isExtensible(it)) return 'F';
+    // not necessary to add metadata
+    if (!create) return 'E';
+    // add missing metadata
+    setMetadata(it);
+  // return object ID
+  } return it[METADATA].objectID;
+};
+
+var getWeakData = function (it, create) {
+  if (!hasOwn(it, METADATA)) {
+    // can't set metadata to uncaught frozen object
+    if (!isExtensible(it)) return true;
+    // not necessary to add metadata
+    if (!create) return false;
+    // add missing metadata
+    setMetadata(it);
+  // return the store of weak collections IDs
+  } return it[METADATA].weakData;
+};
+
+// add metadata on freeze-family methods calling
+var onFreeze = function (it) {
+  if (FREEZING && REQUIRED && isExtensible(it) && !hasOwn(it, METADATA)) setMetadata(it);
+  return it;
+};
+
+var enable = function () {
+  meta.enable = function () { /* empty */ };
+  REQUIRED = true;
+  var getOwnPropertyNames = getOwnPropertyNamesModule.f;
+  var splice = uncurryThis([].splice);
+  var test = {};
+  test[METADATA] = 1;
+
+  // prevent exposing of metadata key
+  if (getOwnPropertyNames(test).length) {
+    getOwnPropertyNamesModule.f = function (it) {
+      var result = getOwnPropertyNames(it);
+      for (var i = 0, length = result.length; i < length; i++) {
+        if (result[i] === METADATA) {
+          splice(result, i, 1);
+          break;
+        }
+      } return result;
+    };
+
+    $({ target: 'Object', stat: true, forced: true }, {
+      getOwnPropertyNames: getOwnPropertyNamesExternalModule.f
+    });
+  }
+};
+
+var meta = module.exports = {
+  enable: enable,
+  fastKey: fastKey,
+  getWeakData: getWeakData,
+  onFreeze: onFreeze
+};
+
+hiddenKeys[METADATA] = true;
+
+
+/***/ }),
+
 /***/ "f26d":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24841,7 +25288,7 @@ if (typeof window !== 'undefined') {
 // EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
 var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader-v16/dist??ref--1-1!./src/components/TapirWidget.vue?vue&type=template&id=5e0d382e
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader-v16/dist??ref--1-1!./src/components/TapirWidget.vue?vue&type=template&id=51ed1756
 
 var _hoisted_1 = {
   class: "text-center font-sans w-96 mx-auto rounded-lg shadow-lg border-solid border-2 p-8"
@@ -24908,12 +25355,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     color: $props.buttonColor
   }, null, 8, ["onSubmit", "color"])]);
 }
-// CONCATENATED MODULE: ./src/components/TapirWidget.vue?vue&type=template&id=5e0d382e
+// CONCATENATED MODULE: ./src/components/TapirWidget.vue?vue&type=template&id=51ed1756
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.to-string.js
 var es_object_to_string = __webpack_require__("d3b7");
 
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.promise.js
+var es_promise = __webpack_require__("e6cf");
+
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js
+
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
@@ -24956,9 +25407,6 @@ var runtime = __webpack_require__("96cf");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.number.constructor.js
 var es_number_constructor = __webpack_require__("a9e3");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.promise.js
-var es_promise = __webpack_require__("e6cf");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.function.name.js
 var es_function_name = __webpack_require__("b0c0");
@@ -25076,6 +25524,9 @@ var web_dom_collections_for_each = __webpack_require__("159b");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.slice.js
 var es_array_slice = __webpack_require__("fb6a");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.iterator.js
+var es_array_iterator = __webpack_require__("e260");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.typed-array.float32-array.js
 var es_typed_array_float32_array = __webpack_require__("cfc3");
@@ -25212,6 +25663,7 @@ var js = __webpack_require__("db3f");
 
 
 
+
 /* eslint-disable */
 
 
@@ -25279,8 +25731,31 @@ var mp3_encoder_default = /*#__PURE__*/function () {
 }();
 
 
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/checkPrivateRedeclaration.js
+function _checkPrivateRedeclaration(obj, privateCollection) {
+  if (privateCollection.has(obj)) {
+    throw new TypeError("Cannot initialize the same private elements twice on an object");
+  }
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/classPrivateMethodInitSpec.js
+
+function _classPrivateMethodInitSpec(obj, privateSet) {
+  _checkPrivateRedeclaration(obj, privateSet);
+  privateSet.add(obj);
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/classPrivateMethodGet.js
+function _classPrivateMethodGet(receiver, privateSet, fn) {
+  if (!privateSet.has(receiver)) {
+    throw new TypeError("attempted to get private field on non-instance");
+  }
+
+  return fn;
+}
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array-buffer.constructor.js
 var es_array_buffer_constructor = __webpack_require__("c19f");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.weak-set.js
+var es_weak_set = __webpack_require__("1fe2");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.typed-array.float64-array.js
 var es_typed_array_float64_array = __webpack_require__("4a9b");
@@ -25320,33 +25795,49 @@ var es_typed_array_float64_array = __webpack_require__("4a9b");
 
 
 
+
+
+
+
+var _floatTo16BitPCM = /*#__PURE__*/new WeakSet();
+
+var _joinSamples = /*#__PURE__*/new WeakSet();
+
+var _writeString = /*#__PURE__*/new WeakSet();
+
 /* eslint-disable */
-var wav_encoder_default = /*#__PURE__*/function () {
-  function _default(options) {
-    _classCallCheck(this, _default);
+var wav_encoder_WavEncoder = /*#__PURE__*/function () {
+  function WavEncoder(options) {
+    _classCallCheck(this, WavEncoder);
+
+    _classPrivateMethodInitSpec(this, _writeString);
+
+    _classPrivateMethodInitSpec(this, _joinSamples);
+
+    _classPrivateMethodInitSpec(this, _floatTo16BitPCM);
 
     this.bufferSize = options.bufferSize || 4096;
     this.sampleRate = options.sampleRate;
     this.samples = options.samples;
   }
 
-  _createClass(_default, [{
+  _createClass(WavEncoder, [{
     key: "finish",
     value: function finish() {
-      this._joinSamples();
+      _classPrivateMethodGet(this, _joinSamples, _joinSamples2).call(this);
 
       var buffer = new ArrayBuffer(44 + this.samples.length * 2);
       var view = new DataView(buffer);
 
-      this._writeString(view, 0, 'RIFF'); // RIFF identifier
+      _classPrivateMethodGet(this, _writeString, _writeString2).call(this, view, 0, 'RIFF'); // RIFF identifier
 
 
       view.setUint32(4, 36 + this.samples.length * 2, true); // RIFF chunk length
 
-      this._writeString(view, 8, 'WAVE'); // RIFF type
+      _classPrivateMethodGet(this, _writeString, _writeString2).call(this, view, 8, 'WAVE'); // RIFF type
 
 
-      this._writeString(view, 12, 'fmt '); // format chunk identifier
+      _classPrivateMethodGet(this, _writeString, _writeString2).call(this, view, 12, 'fmt '); // format chunk identifier
 
 
       view.setUint32(16, 16, true); // format chunk length
@@ -25363,12 +25854,12 @@ var wav_encoder_default = /*#__PURE__*/function () {
 
       view.setUint16(34, 16, true); // bits per sample
 
-      this._writeString(view, 36, 'data'); // data chunk identifier
+      _classPrivateMethodGet(this, _writeString, _writeString2).call(this, view, 36, 'data'); // data chunk identifier
 
 
       view.setUint32(40, this.samples.length * 2, true); // data chunk length
 
-      this._floatTo16BitPCM(view, 44, this.samples);
+      _classPrivateMethodGet(this, _floatTo16BitPCM, _floatTo16BitPCM2).call(this, view, 44, this.samples);
 
       var blob = new Blob([view], {
         type: 'audio/wav'
@@ -25379,42 +25870,39 @@ var wav_encoder_default = /*#__PURE__*/function () {
         url: URL.createObjectURL(blob)
       };
     }
-  }, {
-    key: "_floatTo16BitPCM",
-    value: function _floatTo16BitPCM(output, offset, input) {
-      for (var i = 0; i < input.length; i++, offset += 2) {
-        var s = Math.max(-1, Math.min(1, input[i]));
-        output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
-      }
-    }
-  }, {
-    key: "_joinSamples",
-    value: function _joinSamples() {
-      var recordLength = this.samples.length * this.bufferSize;
-      var joinedSamples = new Float64Array(recordLength);
-      var offset = 0;
-
-      for (var i = 0; i < this.samples.length; i++) {
-        var sample = this.samples[i];
-        joinedSamples.set(sample, offset);
-        offset += sample.length;
-      }
-
-      this.samples = joinedSamples;
-    }
-  }, {
-    key: "_writeString",
-    value: function _writeString(view, offset, string) {
-      for (var i = 0; i < string.length; i++) {
-        view.setUint8(offset + i, string.charCodeAt(i));
-      }
-    }
   }]);
 
-  return _default;
+  return WavEncoder;
 }();
 
+function _floatTo16BitPCM2(output, offset, input) {
+  for (var i = 0; i < input.length; i++, offset += 2) {
+    var s = Math.max(-1, Math.min(1, input[i]));
+    output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+  }
+}
 
+function _joinSamples2() {
+  var recordLength = this.samples.length * this.bufferSize;
+  var joinedSamples = new Float64Array(recordLength);
+  var offset = 0;
+
+  for (var i = 0; i < this.samples.length; i++) {
+    var sample = this.samples[i];
+    joinedSamples.set(sample, offset);
+    offset += sample.length;
+  }
+
+  this.samples = joinedSamples;
+}
+
+function _writeString2(view, offset, string) {
+  for (var i = 0; i < string.length; i++) {
+    view.setUint8(offset + i, string.charCodeAt(i));
+  }
+}
+
+/* harmony default export */ var wav_encoder = (wav_encoder_WavEncoder);
 // CONCATENATED MODULE: ./src/lib/utils.js
 function convertTimeMMSS(seconds) {
   if (!seconds) {
@@ -25424,6 +25912,7 @@ function convertTimeMMSS(seconds) {
   return new Date(seconds * 1000).toISOString().substr(14, 5);
 }
 // CONCATENATED MODULE: ./src/lib/recorder.js
+
 
 
 
@@ -25519,7 +26008,7 @@ var recorder_default = /*#__PURE__*/function () {
       if (this._isMp3()) {
         record = this.lameEncoder.finish();
       } else {
-        var wavEncoder = new wav_encoder_default({
+        var wavEncoder = new wav_encoder({
           bufferSize: this.bufferSize,
           sampleRate: this.encoderOptions.sampleRate,
           samples: this.wavSamples
@@ -25626,15 +26115,14 @@ var ERROR_MESSAGE = "Failed to use microphone. Please refresh and try again and 
 var SUCCESS_MESSAGE = "Successfully recorded message!";
 var SUCCESS_MESSAGE_SUBMIT = "Successfully submitted audio message! Thank you!";
 var ERROR_SUBMITTING_MESSAGE = "Error submitting audio message! Please try again later.";
-var MP3_FORMAT = "mp3";
 /* harmony default export */ var TapirWidgetvue_type_script_lang_js = ({
   name: "TapirWidget",
   props: {
-    // in minutes
     time: {
       type: Number,
       default: 1
     },
+    // in minutes
     bitRate: {
       type: Number,
       default: 128
@@ -25651,6 +26139,11 @@ var MP3_FORMAT = "mp3";
       type: String,
       default: "green"
     },
+    audioFormat: {
+      type: String,
+      default: "MP3"
+    },
+    // can be MP3 or WAV
     // callback functions
     afterRecording: {
       type: Function
@@ -25661,6 +26154,10 @@ var MP3_FORMAT = "mp3";
     failedUpload: {
       type: Function
     }
+  },
+  components: {
+    IconButton: IconButton,
+    SubmitButton: SubmitButton
   },
   data: function data() {
     return {
@@ -25687,10 +26184,6 @@ var MP3_FORMAT = "mp3";
       return convertTimeMMSS((_this$recorder2 = this.recorder) === null || _this$recorder2 === void 0 ? void 0 : _this$recorder2.duration);
     }
   },
-  components: {
-    IconButton: IconButton,
-    SubmitButton: SubmitButton
-  },
   beforeUnmount: function beforeUnmount() {
     if (this.recording) {
       this.stopRecorder();
@@ -25711,7 +26204,7 @@ var MP3_FORMAT = "mp3";
         micFailed: this.micFailed,
         bitRate: this.bitRate,
         sampleRate: this.sampleRate,
-        format: MP3_FORMAT
+        format: this.audioFormat
       });
       this.recorder.start();
       this.successMessage = null;

@@ -50,7 +50,7 @@ yarn add vue-audio-tapir --save
 ```html
 <template>
   <tapir-widget :time="2" backendEndpoint="https://your-endpoint.com/.netlify/functions/audio-message" 
-                buttonColor="green"/>
+                buttonColor="green" audioFormat="MP3"/>
 </template>
 
 <script>
@@ -75,12 +75,16 @@ export default {
 | sampleRate       | Number   | sample rate of recording                          |
 | backendEndpoint  | String   | URL of the service that receives the data as POST |
 | buttonColor      | String   | color code of the buttons for theming             |
+| audioFormat      | String   | file format of audio recording (MP3 or WAV)       |
 | afterRecording   | Function | callback function when recording is finished.     |
 | successfulUpload | Function | callback function that is called when data is uploaded successfully |
 | failedUpload     | Function | callback function that is called when upload failed. |
 
-The data sent to the server is encoded in the MP3 format for efficient storage.
+The data sent to the server is encoded either in the MP3 or WAV format.
 For MP3 encoding the [lamejs](https://github.com/zhuker/lamejs) library is used.
+
+MP3 encoding saves space but needs more processing power on the client device. WAV has
+bigger file size but the encoding is faster and needs less power.
 
 ## Dependencies
 
@@ -96,6 +100,11 @@ Your can read more about the Audio Tapir project on my blog:
 
 https://www.tderflinger.com/en/easily-receive-audio-messages-from-users
 
+## Further Reading
+
+- [Web Audio API on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+- [WAV File Format](https://en.wikipedia.org/wiki/WAV)
+- [MP3 File Format](https://en.wikipedia.org/wiki/MP3)
 
 ## References
 
