@@ -33,15 +33,17 @@
 </template>
 
 <script>
+import Service from "../api/Service";
+import Recorder from "../lib/Recorder";
+import convertTimeMMSS from "../lib/Utils";
+import "../styles/app.css";
 import IconButton from "./IconButton.vue";
 import SubmitButton from "./SubmitButton.vue";
-import Recorder from "../lib/recorder";
-import convertTimeMMSS from "../lib/utils";
-import "../styles/app.css";
 
 const INSTRUCTION_MESSAGE = "Click icon to start recording message.";
 const INSTRUCTION_MESSAGE_STOP = "Click icon again to stop recording.";
-const ERROR_MESSAGE = "Failed to use microphone. Please refresh and try again and permit the use of a microphone.";
+const ERROR_MESSAGE =
+  "Failed to use microphone. Please refresh and try again and permit the use of a microphone.";
 const SUCCESS_MESSAGE = "Successfully recorded message!";
 const SUCCESS_MESSAGE_SUBMIT = "Successfully submitted audio message! Thank you!";
 const ERROR_SUBMITTING_MESSAGE = "Error submitting audio message! Please try again later.";
@@ -49,12 +51,12 @@ const ERROR_SUBMITTING_MESSAGE = "Error submitting audio message! Please try aga
 export default {
   name: "TapirWidget",
   props: {
-    time: { type: Number, default: 1 }, // in minutes
+    // in minutes
+    time: { type: Number, default: 1 },
     bitRate: { type: Number, default: 128 },
     sampleRate: { type: Number, default: 44100 },
-    backendEndpoint: { type: String, default: "" },
+    backendEndpoint: { type: String },
     buttonColor: { type: String, default: "green" },
-    audioFormat: { type: String, default: "MP3" }, // can be MP3 or WAV
 
     // callback functions
     afterRecording: { type: Function },
@@ -106,12 +108,12 @@ export default {
         micFailed: this.micFailed,
         bitRate: this.bitRate,
         sampleRate: this.sampleRate,
-        format: this.audioFormat,
       });
       this.recorder.start();
       this.successMessage = null;
       this.errorMessage = null;
       this.instructionMessage = INSTRUCTION_MESSAGE_STOP;
+      this.service = new Service(this.backendEndpoint);
     },
     stopRecording() {
       this.recorder.stop();
@@ -131,25 +133,15 @@ export default {
         return;
       }
 
-      try {
-        const response = await fetch(this.backendEndpoint, {
-          method: "POST",
-          body: this.recordedBlob,
-          mode: "cors",
-          credentials: "same-origin",
-          header: {
-            "content-type": "audio/mpeg",
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Error sending data!");
-        }
+      const result = await this.service.postBackend(this.recordedBlob);
+      if (result) {
         this.errorMessage = null;
         this.successMessage = SUCCESS_MESSAGE_SUBMIT;
         if (this.successfulUpload) {
           this.successfulUpload();
         }
-      } catch (error) {
+      } else {
+        // error uploading
         this.successMessage = null;
         this.errorMessage = ERROR_SUBMITTING_MESSAGE;
         if (this.failedUpload) {
