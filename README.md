@@ -50,7 +50,7 @@ yarn add vue-audio-tapir --save
 ```html
 <template>
   <tapir-widget :time="2" backendEndpoint="https://your-endpoint.com/.netlify/functions/audio-message" 
-                buttonColor="green" audioFormat="MP3"/>
+                buttonColor="green"/>
 </template>
 
 <script>
