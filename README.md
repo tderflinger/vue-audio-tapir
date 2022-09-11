@@ -87,6 +87,22 @@ The data sent to the server is encoded in the WAV format.
 - [Vue 3](https://v3.vuejs.org/)
 - [Tailwindcss](https://tailwindcss.com/)
 
+## Local Development
+
+If you need to run `audio-tapir` locally, run:
+
+```bash
+npm run serve
+```
+
+## Building
+
+If you want to build `audio-tapir` locally, run:
+
+```bash
+npm run build
+```
+
 ## Compatibility
 
 Successfully tested with applications that use Vue 3 and `vue-cli`. 
