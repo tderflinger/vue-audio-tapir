@@ -86,6 +86,10 @@ The data sent to the server is encoded in the WAV format.
 - [Vue 3](https://v3.vuejs.org/)
 - [Tailwindcss](https://tailwindcss.com/)
 
+## Compatibility
+
+Successfully tested with applications that use Vue 3 and `vue-cli`. 
+
 ## More Information
 
 Follow me on Twitter for updates: [@tderflinger](https://twitter.com/tderflinger)
