@@ -82,11 +82,6 @@ export default {
 
 The data sent to the server is encoded in the WAV format.
 
-## Dependencies
-
-- [Vue 3](https://v3.vuejs.org/)
-- [Tailwindcss](https://tailwindcss.com/)
-
 ## Local Development
 
 If you need to run `audio-tapir` locally, run:
@@ -106,6 +101,11 @@ npm run build
 ## Compatibility
 
 Successfully tested with applications that use Vue 3 and `vue-cli`. 
+
+## Dependencies
+
+- [Vue 3](https://v3.vuejs.org/)
+- [Tailwindcss](https://tailwindcss.com/)
 
 ## More Information
 
