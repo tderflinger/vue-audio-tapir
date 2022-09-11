@@ -1512,7 +1512,7 @@ if (typeof window !== 'undefined') {
 
 // EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
 var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__(7203);
-;// CONCATENATED MODULE: ./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./src/components/TapirWidget.vue?vue&type=template&id=4e80cf17
+;// CONCATENATED MODULE: ./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib/index.js??clonedRuleSet-82.use[1]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[3]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./src/components/TapirWidget.vue?vue&type=template&id=5f341107
 
 const _hoisted_1 = {
   class: "text-center font-sans w-96 mx-auto rounded-lg shadow-lg border-solid border-2 p-8"
@@ -1579,7 +1579,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     color: $props.buttonColor
   }, null, 8, ["onSubmit", "color"])]);
 }
-;// CONCATENATED MODULE: ./src/components/TapirWidget.vue?vue&type=template&id=4e80cf17
+;// CONCATENATED MODULE: ./src/components/TapirWidget.vue?vue&type=template&id=5f341107
 
 ;// CONCATENATED MODULE: ./src/api/Service.js
 class Service {
@@ -1589,22 +1589,14 @@ class Service {
 
 
   async postBackend(recordedBlob) {
-    console.log("postBackend!", this.backendEndpoint);
-
     try {
       const response = await fetch(this.backendEndpoint, {
         method: "POST",
-        body: recordedBlob,
-        mode: "cors",
-        credentials: "same-origin",
-        header: {
-          "content-type": "audio/mpeg" // audio/wav
-
-        }
+        body: recordedBlob
       });
 
       if (!response.ok) {
-        throw new Error("Error sending data!");
+        return false;
       }
 
       return true;
@@ -1956,6 +1948,10 @@ const ERROR_SUBMITTING_MESSAGE = "Error submitting audio message! Please try aga
     },
     failedUpload: {
       type: Function
+    },
+    customUpload: {
+      type: Function,
+      default: null
     }
   },
   components: {
@@ -2041,7 +2037,13 @@ const ERROR_SUBMITTING_MESSAGE = "Error submitting audio message! Please try aga
         return;
       }
 
-      const result = await this.service.postBackend(this.recordedBlob);
+      let result = null;
+
+      if (this.customUpload) {
+        result = await this.customUpload(this.recordedBlob);
+      } else {
+        result = await this.service.postBackend(this.recordedBlob);
+      }
 
       if (result) {
         this.errorMessage = null;

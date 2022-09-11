@@ -71,13 +71,14 @@ export default {
 | Name             |  Type    | Description                                       | 
 |------------------|----------|---------------------------------------------------|
 | time             | Number   | Maximum recording time in minutes                 |
-| bitRate          | Number   | bit rate of recording                             |
-| sampleRate       | Number   | sample rate of recording                          |
+| bitRate          | Number   | Bit rate of recording                             |
+| sampleRate       | Number   | Sample rate of recording                          |
 | backendEndpoint  | String   | URL of the service that receives the data as POST |
-| buttonColor      | String   | color code of the buttons for theming             |
-| afterRecording   | Function | callback function when recording is finished.     |
-| successfulUpload | Function | callback function that is called when data is uploaded successfully |
-| failedUpload     | Function | callback function that is called when upload failed. |
+| buttonColor      | String   | Color code of the buttons for theming             |
+| afterRecording   | Function | Callback function when recording is finished.     |
+| successfulUpload | Function | Callback function that is called when data is uploaded successfully. |
+| failedUpload     | Function | Callback function that is called when upload failed. |
+| customUpload     | Function | Custom upload function that expects the audio blob as parameter. Returns true when successful, false when error. |
 
 The data sent to the server is encoded in the WAV format.
 
