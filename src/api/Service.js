@@ -1,6 +1,4 @@
-
 export default class Service {
-
   constructor(backendEndpoint) {
     this.backendEndpoint = backendEndpoint;
   }
@@ -11,11 +9,6 @@ export default class Service {
       const response = await fetch(this.backendEndpoint, {
         method: "POST",
         body: recordedBlob,
-        mode: "cors",
-        credentials: "same-origin",
-        header: {
-          "content-type": "audio/mpeg",  // audio/wav
-        },
       });
       if (!response.ok) {
         throw new Error("Error sending data!");
