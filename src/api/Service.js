@@ -11,7 +11,7 @@ export default class Service {
         body: recordedBlob,
       });
       if (!response.ok) {
-        throw new Error("Error sending data!");
+        return false;
       }
 
       return true;

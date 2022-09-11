@@ -62,6 +62,7 @@ export default {
     afterRecording: { type: Function },
     successfulUpload: { type: Function },
     failedUpload: { type: Function },
+    customUpload: { type: Function, default: null }
   },
   components: {
     IconButton,
@@ -133,7 +134,13 @@ export default {
         return;
       }
 
-      const result = await this.service.postBackend(this.recordedBlob);
+      let result = null;
+      if (this.customUpload) {
+        result = await this.customUpload(this.recordedBlob);
+      } else {
+        result = await this.service.postBackend(this.recordedBlob);
+      }
+
       if (result) {
         this.errorMessage = null;
         this.successMessage = SUCCESS_MESSAGE_SUBMIT;
