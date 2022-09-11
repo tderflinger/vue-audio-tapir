@@ -75,22 +75,16 @@ export default {
 | sampleRate       | Number   | sample rate of recording                          |
 | backendEndpoint  | String   | URL of the service that receives the data as POST |
 | buttonColor      | String   | color code of the buttons for theming             |
-| audioFormat      | String   | file format of audio recording (MP3 or WAV)       |
 | afterRecording   | Function | callback function when recording is finished.     |
 | successfulUpload | Function | callback function that is called when data is uploaded successfully |
 | failedUpload     | Function | callback function that is called when upload failed. |
 
-The data sent to the server is encoded either in the MP3 or WAV format.
-For MP3 encoding the [lamejs](https://github.com/zhuker/lamejs) library is used.
-
-MP3 encoding saves space but needs more processing power on the client device. WAV has
-bigger file size but the encoding is faster and needs less power.
+The data sent to the server is encoded in the WAV format.
 
 ## Dependencies
 
 - [Vue 3](https://v3.vuejs.org/)
 - [Tailwindcss](https://tailwindcss.com/)
-- [lamejs](https://github.com/zhuker/lamejs)
 
 ## More Information
 
@@ -104,7 +98,6 @@ https://www.tderflinger.com/en/easily-receive-audio-messages-from-users
 
 - [Web Audio API on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 - [WAV File Format](https://en.wikipedia.org/wiki/WAV)
-- [MP3 File Format](https://en.wikipedia.org/wiki/MP3)
 
 ## References
 

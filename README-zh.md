@@ -87,7 +87,6 @@ export default {
 
 - [Vue 3](https://v3.vuejs.org/)
 - [Tailwindcss](https://tailwindcss.com/)
-- [lamejs](https://github.com/zhuker/lamejs)
 
 ## 更多信息
 
