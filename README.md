@@ -84,6 +84,12 @@ The data sent to the server is encoded in the WAV format.
 
 ## Local Development
 
+You will need to **manually** install some dependencies in order to do local development:
+
+* vue
+* core-js
+* vue-template-compiler
+
 If you need to run `audio-tapir` locally, run:
 
 ```bash
