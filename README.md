@@ -79,6 +79,15 @@ export default {
 | successfulUpload | Function | Callback function that is called when data is uploaded successfully. |
 | failedUpload     | Function | Callback function that is called when upload failed. |
 | customUpload     | Function | Custom upload function that expects the audio blob as parameter. Returns true when successful, false when error. |
+| title            | String   | Component title                                   |
+| instructionMessageStart | String | Message shown before recording               |
+| instructionMessageStop | String  | Message shown after recording                |
+| listenInstructions |  String     | Message shown below playback controls        |
+| submitLabel |  String            | Label on submit button                       |
+| errorMessageMicrophone | String  | Error when recording fails                   |
+| successMessageRecorded | String  | Message shown after recording succeeds       |
+| successMessageSubmitted | String | Message shown after uploading succeeds       |
+| errorMessageSubmitting | String  | Message shown when uploading fails           |
 
 The data sent to the server is encoded in the WAV format.
 
