@@ -1,6 +1,6 @@
 <template>
   <div class="text-center font-sans w-96 mx-auto rounded-lg shadow-lg border-solid border-2 p-8">
-    <h2 class="font-bold text-2xl">Record Audio Message</h2>
+    <h2 class="font-bold text-2xl">{{ title }}</h2>
     <div>
       <icon-button
         :style="{ 'border-color': buttonColor }"
@@ -26,9 +26,9 @@
         Your browser does not support the
         <code>audio</code> element.
       </audio>
-      <figcaption class="text-sm mt-2">Listen to your recording before submitting.</figcaption>
+      <figcaption class="text-sm mt-2">{{ listenInstructions }}</figcaption>
     </figure>
-    <submit-button @submit="sendData" :color="buttonColor" />
+    <submit-button @submit="sendData" :color="buttonColor" :label="submitLabel" />
   </div>
 </template>
 
@@ -40,14 +40,6 @@ import "../styles/app.css";
 import IconButton from "./IconButton.vue";
 import SubmitButton from "./SubmitButton.vue";
 
-const INSTRUCTION_MESSAGE = "Click icon to start recording message.";
-const INSTRUCTION_MESSAGE_STOP = "Click icon again to stop recording.";
-const ERROR_MESSAGE =
-  "Failed to use microphone. Please refresh and try again and permit the use of a microphone.";
-const SUCCESS_MESSAGE = "Successfully recorded message!";
-const SUCCESS_MESSAGE_SUBMIT = "Successfully submitted audio message! Thank you!";
-const ERROR_SUBMITTING_MESSAGE = "Error submitting audio message! Please try again later.";
-
 export default {
   name: "TapirWidget",
   props: {
@@ -57,6 +49,17 @@ export default {
     sampleRate: { type: Number, default: 44100 },
     backendEndpoint: { type: String },
     buttonColor: { type: String, default: "green" },
+
+    // labels
+    title: { type: String, default: "Record Audio Message" },
+    instructionMessageStart: { type: String, default: "Click icon to start recording message." },
+    instructionMessageStop: { type: String, default: "Click icon again to stop recording." },
+    listenInstructions: { type: String, default: "Listen to your recording before submitting." },
+    submitLabel: { type: String, default: "Submit" },
+    errorMessageMicrophone: { type: String, default: "Failed to use microphone. Please refresh and try again and permit the use of a microphone." },
+    successMessageRecorded: { type: String, default: "Successfully recorded message!" },
+    successMessageSubmitted: { type: String, default: "Successfully submitted audio message! Thank you!" },
+    errorMessageSubmitting: { type: String, default: "Error submitting audio message! Please try again later." },
 
     // callback functions
     afterRecording: { type: Function },
@@ -76,7 +79,7 @@ export default {
       recorder: null,
       successMessage: null,
       errorMessage: null,
-      instructionMessage: INSTRUCTION_MESSAGE,
+      instructionMessage: this.instructionMessageStart,
     };
   },
   computed: {
@@ -113,7 +116,7 @@ export default {
       this.recorder.start();
       this.successMessage = null;
       this.errorMessage = null;
-      this.instructionMessage = INSTRUCTION_MESSAGE_STOP;
+      this.instructionMessage = this.instructionMessageStop;
       this.service = new Service(this.backendEndpoint);
     },
     stopRecording() {
@@ -122,7 +125,7 @@ export default {
       this.recordedAudio = recordList[0].url;
       this.recordedBlob = recordList[0].blob;
       if (this.recordedAudio) {
-        this.successMessage = SUCCESS_MESSAGE;
+        this.successMessage = this.successMessageRecorded;
         this.instructionMessage = null;
       }
       if (this.afterRecording) {
@@ -143,14 +146,14 @@ export default {
 
       if (result) {
         this.errorMessage = null;
-        this.successMessage = SUCCESS_MESSAGE_SUBMIT;
+        this.successMessage = this.successMessageSubmitted;
         if (this.successfulUpload) {
           this.successfulUpload();
         }
       } else {
         // error uploading
         this.successMessage = null;
-        this.errorMessage = ERROR_SUBMITTING_MESSAGE;
+        this.errorMessage = this.errorMessageSubmitting;
         if (this.failedUpload) {
           this.failedUpload();
         }
@@ -158,8 +161,8 @@ export default {
     },
     micFailed() {
       this.recording = false;
-      this.instructionMessage = INSTRUCTION_MESSAGE;
-      this.errorMessage = ERROR_MESSAGE;
+      this.instructionMessage = this.instructionMessageStart;
+      this.errorMessage = this.errorMessageMicrophone;
     },
   },
 };
