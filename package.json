@@ -24,7 +24,7 @@
     "core-js": "3.19.1"
   },
   "peerDependencies": {
-    "vue": "3.2.39"
+    "vue": "^3.2.39"
   },
   "devDependencies": {
     "@babel/core": "7.18.9",
