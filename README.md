@@ -113,7 +113,7 @@ Successfully tested with applications that use Vue 3, `vue-cli` and `vite`.
 
 ## More Information
 
-Follow me on Twitter for updates: [@tderflinger](https://twitter.com/tderflinger)
+Follow me on Mastodon for updates: [@td8](https://mastodontech.de/@td8)
 
 Your can read more about the Audio Tapir project on my blog: 
 
