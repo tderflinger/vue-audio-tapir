@@ -1,0 +1,25 @@
+{
+  "name": "vue-audio-tapir-example-vue-cli",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "tailwindcss": "3.4.4",
+    "vue": "3.4.29",
+    "vue-audio-tapir": "1.6.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "5.0.8",
+    "@vue/cli-service": "5.0.8",
+    "@vue/compiler-sfc": "3.4.29"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

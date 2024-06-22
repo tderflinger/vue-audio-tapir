@@ -1176,6 +1176,40 @@ module.exports = function (argument) {
 
 /***/ }),
 
+/***/ 4590:
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+var global = __webpack_require__(7854);
+var toPositiveInteger = __webpack_require__(3002);
+
+var RangeError = global.RangeError;
+
+module.exports = function (it, BYTES) {
+  var offset = toPositiveInteger(it);
+  if (offset % BYTES) throw RangeError('Wrong offset');
+  return offset;
+};
+
+
+/***/ }),
+
+/***/ 3002:
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+var global = __webpack_require__(7854);
+var toIntegerOrInfinity = __webpack_require__(9303);
+
+var RangeError = global.RangeError;
+
+module.exports = function (it) {
+  var result = toIntegerOrInfinity(it);
+  if (result < 0) throw RangeError("The argument can't be less than 0");
+  return result;
+};
+
+
+/***/ }),
+
 /***/ 7593:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
@@ -1318,27 +1352,39 @@ module.exports = function (name) {
 
 /***/ }),
 
-/***/ 8675:
+/***/ 3462:
 /***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
+var global = __webpack_require__(7854);
 var ArrayBufferViewCore = __webpack_require__(260);
 var lengthOfArrayLike = __webpack_require__(6244);
-var toIntegerOrInfinity = __webpack_require__(9303);
+var toOffset = __webpack_require__(4590);
+var toObject = __webpack_require__(7908);
+var fails = __webpack_require__(7293);
 
+var RangeError = global.RangeError;
 var aTypedArray = ArrayBufferViewCore.aTypedArray;
 var exportTypedArrayMethod = ArrayBufferViewCore.exportTypedArrayMethod;
 
-// `%TypedArray%.prototype.at` method
-// https://github.com/tc39/proposal-relative-indexing-method
-exportTypedArrayMethod('at', function at(index) {
-  var O = aTypedArray(this);
-  var len = lengthOfArrayLike(O);
-  var relativeIndex = toIntegerOrInfinity(index);
-  var k = relativeIndex >= 0 ? relativeIndex : len + relativeIndex;
-  return (k < 0 || k >= len) ? undefined : O[k];
+var FORCED = fails(function () {
+  // eslint-disable-next-line es/no-typed-arrays -- required for testing
+  new Int8Array(1).set({});
 });
+
+// `%TypedArray%.prototype.set` method
+// https://tc39.es/ecma262/#sec-%typedarray%.prototype.set
+exportTypedArrayMethod('set', function set(arrayLike /* , offset */) {
+  aTypedArray(this);
+  var offset = toOffset(arguments.length > 1 ? arguments[1] : undefined, 1);
+  var length = this.length;
+  var src = toObject(arrayLike);
+  var len = lengthOfArrayLike(src);
+  var index = 0;
+  if (len + offset > length) throw RangeError('Wrong length');
+  while (index < len) this[offset + index] = src[index++];
+}, FORCED);
 
 
 /***/ }),
@@ -1588,8 +1634,8 @@ class Service {
   }
 
 }
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.typed-array.at.js
-var es_typed_array_at = __webpack_require__(8675);
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.typed-array.set.js
+var es_typed_array_set = __webpack_require__(3462);
 // EXTERNAL MODULE: ./node_modules/core-js/modules/esnext.typed-array.find-last.js
 var esnext_typed_array_find_last = __webpack_require__(7380);
 // EXTERNAL MODULE: ./node_modules/core-js/modules/esnext.typed-array.find-last-index.js
