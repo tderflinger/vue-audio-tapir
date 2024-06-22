@@ -66,6 +66,10 @@ export default {
 </script>
 ```
 
+## More Example
+
+In the `examples` folder you can find a Vue CLI example and a Vite example.
+
 ## Properties
 
 | Name             |  Type    | Description                                       | 
@@ -100,7 +104,7 @@ npm run build
 
 ## Compatibility
 
-Successfully tested with applications that use Vue 3 and `vue-cli`. 
+Successfully tested with applications that use Vue 3, `vue-cli` and `vite`. 
 
 ## Dependencies
 
